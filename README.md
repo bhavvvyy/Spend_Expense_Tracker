@@ -1,4 +1,4 @@
-# SpendTrack — Expense Tracker
+# SpendTrack — Expense Tracker by Bhavy Patel
 
 A clean beginner-friendly Flask + SQLite expense tracker.
 
