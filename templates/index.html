@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SpendTrack — Expense Dashboard</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="shell">
+<header class="topbar"><div class="brand"><span class="logo">₹</span><div><b>SpendTrack</b><small>PERSONAL FINANCE by Bhavy Patel</small></div></div><span class="status">● LOCAL DATABASE</span></header>
+
+<main>
+<section class="hero">
+<div><p class="eyebrow">EXPENSE TRACKER</p><h1>Know where your money goes.</h1><p class="sub">Track spending, organize categories and keep your finances clear.</p></div>
+<div class="total-card"><span>TOTAL SPENT</span><strong>₹{{ "%.2f"|format(total) }}</strong><small>Across all recorded expenses</small></div>
+</section>
+
+<section class="grid">
+<div class="panel form-panel"><div class="panel-head"><div><span class="number">01</span><h2>Add expense</h2></div><span class="plus">+</span></div>
+<form method="post" action="/add">
+<label>Expense title<input name="title" placeholder="e.g. Lunch" required></label>
+<div class="two"><label>Amount<input name="amount" type="number" min="0.01" step="0.01" placeholder="0.00" required></label>
+<label>Date<input name="expense_date" type="date" required></label></div>
+<label>Category<select name="category"><option>Food</option><option>Travel</option><option>Shopping</option><option>Education</option><option>Bills</option><option>Entertainment</option><option>Other</option></select></label>
+<label>Note <span>(optional)</span><input name="note" placeholder="Short note"></label>
+<button class="primary" type="submit">Add expense <span>→</span></button>
+</form></div>
+
+<div class="panel"><div class="panel-head"><div><span class="number">02</span><h2>Spending overview</h2></div></div>
+<div class="bars">
+{% for c in categories %}
+<div class="bar-row"><div><span>{{ c.category }}</span><b>₹{{ "%.2f"|format(c.total) }}</b></div><div class="bar"><i style="width: {{ ((c.total / total * 100) if total else 0)|round(1) }}%"></i></div></div>
+{% else %}<div class="empty">Add your first expense to see the breakdown.</div>{% endfor %}         
+</div></div>
+</section>
+
+<section class="panel transactions"><div class="panel-head"><div><span class="number">03</span><h2>Recent transactions</h2></div><span class="count">{{ expenses|length }} records</span></div>
+<div class="table-wrap"><table><thead><tr><th>EXPENSE</th><th>CATEGORY</th><th>DATE</th><th>AMOUNT</th><th></th></tr></thead><tbody>
+{% for e in expenses %}<tr><td><b>{{ e.title }}</b><small>{{ e.note or 'No note' }}</small></td><td><span class="tag">{{ e.category }}</span></td><td>{{ e.expense_date }}</td><td class="amount">₹{{ "%.2f"|format(e.amount) }}</td><td><form method="post" action="/delete/{{ e.id }}"><button class="delete" title="Delete">×</button></form></td></tr>
+{% else %}<tr><td colspan="5" class="empty">No transactions yet.</td></tr>{% endfor %}
+</tbody></table></div></section>
+</main>
+
+<footer>© 2026 SpendTrack · Created & Designed by Bhavy Patel</footer>
+
+</div>
+</body>
+</html>
